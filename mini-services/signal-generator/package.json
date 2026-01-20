@@ -1,0 +1,15 @@
+{
+  "name": "signal-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "cd ../.. && bun --hot mini-services/signal-generator/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cron": "^3.1.7"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
