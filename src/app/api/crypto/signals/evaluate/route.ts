@@ -92,19 +92,21 @@ export async function POST(request: NextRequest) {
     })
 
     const totalExecuted = allSignals.length
-    const totalHits = allSignals.filter(s => s.profitLoss && s.profitLoss > 0).length
-    const totalLosses = allSignals.filter(s => s.profitLoss && s.profitLoss < 0).length
-    const winRate = totalExecuted > 0 ? (totalHits / totalExecuted) * 100 : 0
+    const wins = allSignals.filter(s => s.result === 'WIN').length
+    const losses = allSignals.filter(s => s.result === 'LOSS').length
+    const breakevens = allSignals.filter(s => s.result === 'BREAKEVEN').length
+    const winRate = totalExecuted > 0 ? (wins / totalExecuted) * 100 : 0
 
     return NextResponse.json({
       updated: updatedSignals.length,
       hitCount,
       lossCount,
       stats: {
-        totalExecuted,
-        totalHits,
-        totalLosses,
-        winRate: winRate.toFixed(2)
+        total: totalExecuted,
+        wins,
+        losses,
+        breakevens,
+        winRate: wins.toFixed(2)
       }
     })
   } catch (error) {
