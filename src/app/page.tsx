@@ -58,19 +58,14 @@ interface SignalHistory {
 }
 
 interface SignalStats {
-  totalSignals: number
-  totalExecuted: number
-  totalHits: number
-  totalLosses: number
-  winRate: string
-  overall: {
-    totalExecuted: number
-    totalHits: number
-    totalLosses: number
-    winRate: string
-    avgProfit: string
-    avgLoss: string
-  }
+  total: number
+  active: number
+  executed: number
+  wins: number
+  losses: number
+  winRate: number
+  totalProfitLoss: string
+  avgProfitLoss: string
 }
 
 interface PortfolioItem {
@@ -803,7 +798,7 @@ export default function Home() {
                 <span className="text-sm text-slate-400">Hits</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {signalStats?.overall.totalHits || 0}
+                {signalStats?.wins || 0}
               </div>
             </CardContent>
           </Card>
@@ -814,7 +809,7 @@ export default function Home() {
                 <span className="text-sm text-slate-400">Losses</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {signalStats?.overall.totalLosses || 0}
+                {signalStats?.losses || 0}
               </div>
             </CardContent>
           </Card>
@@ -825,7 +820,7 @@ export default function Home() {
                 <span className="text-sm text-slate-400">Win Rate</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {signalStats?.overall.winRate || '0.00'}%
+                {signalStats?.winRate ? signalStats.winRate + '%' : '0%'}
               </div>
             </CardContent>
           </Card>
@@ -836,7 +831,7 @@ export default function Home() {
                 <span className="text-sm text-slate-400">Avg Profit</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {signalStats?.overall.avgProfit || '0.00'}%
+                {signalStats?.totalProfitLoss || '$0.00'}
               </div>
             </CardContent>
           </Card>
@@ -847,7 +842,7 @@ export default function Home() {
                 <span className="text-sm text-slate-400">Avg Loss</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {signalStats?.overall.avgLoss || '0.00'}%
+                {signalStats?.avgProfitLoss || '$0.00'}
               </div>
             </CardContent>
           </Card>
