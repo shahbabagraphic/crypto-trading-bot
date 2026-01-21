@@ -220,10 +220,13 @@ export default function Home() {
       const response = await fetch('/api/crypto/prices')
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
-      setCryptoData(data)
+
+      // Handle both array and error response formats
+      setCryptoData(Array.isArray(data) ? data : [])
       setLastUpdate(new Date())
     } catch (error) {
       console.error('Error fetching crypto data:', error)
+      setCryptoData([])
     } finally {
       setLoading(false)
     }
@@ -234,11 +237,20 @@ export default function Home() {
       const response = await fetch('/api/crypto/signals?limit=100')
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
-      setSignalHistory(data.signals || [])
-      setSignalStats(data.stats)
+
+      // Handle both formats: direct array or {success, signals, stats}
+      if (data.success !== undefined) {
+        setSignalHistory(data.signals || [])
+        setSignalStats(data.stats)
+      } else {
+        setSignalHistory(data || [])
+        // Stats may not be included in this endpoint
+        setSignalStats({ totalSignals: 0, active: 0, executed: 0, wins: 0, losses: 0, winRate: 0 })
+      }
     } catch (error) {
       console.error('Error fetching signal history:', error)
       setSignalHistory([])
+      setSignalStats(null)
     } finally {
       setHistoryLoading(false)
     }
@@ -250,10 +262,11 @@ export default function Home() {
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
       setPortfolio(data.portfolio || [])
-      setPortfolioStats(data.stats)
+      setPortfolioStats(data.stats || null)
     } catch (error) {
       console.error('Error fetching portfolio:', error)
       setPortfolio([])
+      setPortfolioStats(null)
     } finally {
       setPortfolioLoading(false)
     }
@@ -264,7 +277,9 @@ export default function Home() {
       const response = await fetch('/api/alerts')
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
-      setAlerts(data || [])
+
+      // Handle both array and error response formats
+      setAlerts(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching alerts:', error)
       setAlerts([])
@@ -279,10 +294,11 @@ export default function Home() {
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
       setTrades(data.trades || [])
-      setTradeStats(data.stats)
+      setTradeStats(data.stats || null)
     } catch (error) {
       console.error('Error fetching trades:', error)
       setTrades([])
+      setTradeStats(null)
     } finally {
       setTradesLoading(false)
     }
